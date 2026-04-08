@@ -1,0 +1,156 @@
+READ  addr=02 -> 0x10000002
+READ  addr=05 -> 0x10000005
+READ  addr=02 -> 0x10000002
+READ  addr=09 -> 0x10000009
+WRITE addr=05 <- 0xDEADBEEF
+READ  addr=05 -> 0xDEADBEEF
+READ  addr=01 -> 0x10000001
+READ  addr=07 -> 0x10000007
+WRITE addr=09 <- 0xCAFEBABE
+READ  addr=09 -> 0xCAFEBABE
+
+Memory hierarchy configuration:
+  SSD  : size=32, latency=0
+  DRAM : size=16, latency=6
+  L3   : size=8, latency=4
+  L2   : size=4, latency=2
+  L1   : size=2, latency=1
+  Replacement policy: LRU
+
+Instruction access trace:
+Initialized SSD with 12 32-bit instructions (addresses 0..11).
+Cycle 000: READ request for addr 2 -> found at SSD
+Cycle 013: READ completed for addr 2 in L1, value=0x10000002
+Cycle 013: READ request for addr 5 -> found at SSD
+Cycle 026: READ completed for addr 5 in L1, value=0x10000005
+Cycle 026: READ request for addr 2 -> found at L1
+Cycle 026: READ served immediately from L1, value=0x10000002
+Cycle 026: READ request for addr 9 -> found at SSD
+Cycle 039: READ completed for addr 9 in L1, value=0x10000009
+Cycle 039: WRITE request for addr 5 -> target value=0xDEADBEEF, found at L1
+Cycle 039: WRITE completed immediately in L1, new value=0xDEADBEEF
+Cycle 039: READ request for addr 5 -> found at L1
+Cycle 039: READ served immediately from L1, value=0xDEADBEEF
+Cycle 039: READ request for addr 1 -> found at SSD
+Cycle 052: READ completed for addr 1 in L1, value=0x10000001
+Cycle 054: READ request for addr 7 -> found at SSD
+Cycle 067: READ completed for addr 7 in L1, value=0x10000007
+Cycle 067: WRITE request for addr 9 -> target value=0xCAFEBABE, found at L2
+Cycle 068: WRITE completed for addr 9 in L1, new value=0xCAFEBABE
+Cycle 068: READ request for addr 9 -> found at L1
+Cycle 068: READ served immediately from L1, value=0xCAFEBABE
+Cycle 068: starting full flush of dirty lines
+Cycle 092: flush completed
+
+Movement of data across levels:
+Cycle 000: scheduled FILL of addr 2 (0x10000002) SSD -> DRAM, latency=6
+Cycle 006: completed FILL addr 2 SSD -> DRAM
+Cycle 006: scheduled FILL of addr 2 (0x10000002) DRAM -> L3, latency=4
+Cycle 010: completed FILL addr 2 DRAM -> L3
+Cycle 010: scheduled FILL of addr 2 (0x10000002) L3 -> L2, latency=2
+Cycle 012: completed FILL addr 2 L3 -> L2
+Cycle 012: scheduled FILL of addr 2 (0x10000002) L2 -> L1, latency=1
+Cycle 013: completed FILL addr 2 L2 -> L1
+Cycle 013: scheduled FILL of addr 5 (0x10000005) SSD -> DRAM, latency=6
+Cycle 019: completed FILL addr 5 SSD -> DRAM
+Cycle 019: scheduled FILL of addr 5 (0x10000005) DRAM -> L3, latency=4
+Cycle 023: completed FILL addr 5 DRAM -> L3
+Cycle 023: scheduled FILL of addr 5 (0x10000005) L3 -> L2, latency=2
+Cycle 025: completed FILL addr 5 L3 -> L2
+Cycle 025: scheduled FILL of addr 5 (0x10000005) L2 -> L1, latency=1
+Cycle 026: completed FILL addr 5 L2 -> L1
+Cycle 026: scheduled FILL of addr 9 (0x10000009) SSD -> DRAM, latency=6
+Cycle 032: completed FILL addr 9 SSD -> DRAM
+Cycle 032: scheduled FILL of addr 9 (0x10000009) DRAM -> L3, latency=4
+Cycle 036: completed FILL addr 9 DRAM -> L3
+Cycle 036: scheduled FILL of addr 9 (0x10000009) L3 -> L2, latency=2
+Cycle 038: completed FILL addr 9 L3 -> L2
+Cycle 038: scheduled FILL of addr 9 (0x10000009) L2 -> L1, latency=1
+Cycle 039: completed FILL addr 9 L2 -> L1
+Cycle 039: eviction from L1 -> addr 2 value=0x10000002 dirty=False
+Cycle 039: scheduled FILL of addr 1 (0x10000001) SSD -> DRAM, latency=6
+Cycle 045: completed FILL addr 1 SSD -> DRAM
+Cycle 045: scheduled FILL of addr 1 (0x10000001) DRAM -> L3, latency=4
+Cycle 049: completed FILL addr 1 DRAM -> L3
+Cycle 049: scheduled FILL of addr 1 (0x10000001) L3 -> L2, latency=2
+Cycle 051: completed FILL addr 1 L3 -> L2
+Cycle 051: scheduled FILL of addr 1 (0x10000001) L2 -> L1, latency=1
+Cycle 052: completed FILL addr 1 L2 -> L1
+Cycle 052: eviction from L1 -> addr 5 value=0xDEADBEEF dirty=True
+Cycle 052: scheduled WRITEBACK of addr 5 (0xDEADBEEF) L1 -> L2, latency=2
+Cycle 054: completed WRITEBACK addr 5 L1 -> L2
+Cycle 054: scheduled FILL of addr 7 (0x10000007) SSD -> DRAM, latency=6
+Cycle 060: completed FILL addr 7 SSD -> DRAM
+Cycle 060: scheduled FILL of addr 7 (0x10000007) DRAM -> L3, latency=4
+Cycle 064: completed FILL addr 7 DRAM -> L3
+Cycle 064: scheduled FILL of addr 7 (0x10000007) L3 -> L2, latency=2
+Cycle 066: completed FILL addr 7 L3 -> L2
+Cycle 066: eviction from L2 -> addr 2 value=0x10000002 dirty=False
+Cycle 066: scheduled FILL of addr 7 (0x10000007) L2 -> L1, latency=1
+Cycle 067: completed FILL addr 7 L2 -> L1
+Cycle 067: eviction from L1 -> addr 9 value=0x10000009 dirty=False
+Cycle 067: scheduled FILL of addr 9 (0x10000009) L2 -> L1, latency=1
+Cycle 068: completed FILL addr 9 L2 -> L1
+Cycle 068: eviction from L1 -> addr 1 value=0x10000001 dirty=False
+Cycle 068: scheduled FLUSH of addr 9 (0xCAFEBABE) L1 -> L2, latency=2
+Cycle 070: completed FLUSH addr 9 L1 -> L2
+Cycle 070: scheduled FLUSH of addr 5 (0xDEADBEEF) L2 -> L3, latency=4
+Cycle 074: completed FLUSH addr 5 L2 -> L3
+Cycle 074: scheduled FLUSH of addr 9 (0xCAFEBABE) L2 -> L3, latency=4
+Cycle 078: completed FLUSH addr 9 L2 -> L3
+Cycle 078: scheduled FLUSH of addr 5 (0xDEADBEEF) L3 -> DRAM, latency=6
+Cycle 084: completed FLUSH addr 5 L3 -> DRAM
+Cycle 084: scheduled FLUSH of addr 9 (0xCAFEBABE) L3 -> DRAM, latency=6
+Cycle 090: completed FLUSH addr 9 L3 -> DRAM
+Cycle 090: scheduled FLUSH of addr 5 (0xDEADBEEF) DRAM -> SSD, latency=1
+Cycle 091: completed FLUSH addr 5 DRAM -> SSD
+Cycle 091: scheduled FLUSH of addr 9 (0xCAFEBABE) DRAM -> SSD, latency=1
+Cycle 092: completed FLUSH addr 9 DRAM -> SSD
+
+Cache statistics:
+  Reads=8 Writes=2
+  L1 hits=4 misses=6
+  L2 hits=1 misses=5
+  L3 hits=0 misses=5
+
+Final state of each memory level:
+
+[SSD] (12/32)
+  addr=00 value=0x10000000 dirty=False
+  addr=01 value=0x10000001 dirty=False
+  addr=02 value=0x10000002 dirty=False
+  addr=03 value=0x10000003 dirty=False
+  addr=04 value=0x10000004 dirty=False
+  addr=05 value=0xDEADBEEF dirty=False
+  addr=06 value=0x10000006 dirty=False
+  addr=07 value=0x10000007 dirty=False
+  addr=08 value=0x10000008 dirty=False
+  addr=09 value=0xCAFEBABE dirty=False
+  addr=10 value=0x1000000A dirty=False
+  addr=11 value=0x1000000B dirty=False
+
+[DRAM] (5/16)
+  addr=01 value=0x10000001 dirty=False
+  addr=02 value=0x10000002 dirty=False
+  addr=05 value=0xDEADBEEF dirty=False
+  addr=07 value=0x10000007 dirty=False
+  addr=09 value=0xCAFEBABE dirty=False
+
+[L3] (5/8)
+  addr=01 value=0x10000001 dirty=False
+  addr=02 value=0x10000002 dirty=False
+  addr=05 value=0xDEADBEEF dirty=False
+  addr=07 value=0x10000007 dirty=False
+  addr=09 value=0xCAFEBABE dirty=False
+
+[L2] (4/4)
+  addr=01 value=0x10000001 dirty=False
+  addr=05 value=0xDEADBEEF dirty=False
+  addr=07 value=0x10000007 dirty=False
+  addr=09 value=0xCAFEBABE dirty=False
+
+[L1] (2/2)
+  addr=07 value=0x10000007 dirty=False
+  addr=09 value=0xCAFEBABE dirty=False
+
+Total cycles elapsed: 92
